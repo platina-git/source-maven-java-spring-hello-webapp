@@ -25,7 +25,9 @@ pipeline {
       }
     }
     stage('Build Docker Image') {
-      agent any
+      agent {
+        docker { image 'docker:dind' }
+      }
       steps {
         sh 'docker image build -t myweb:v1 docker .'
       }
