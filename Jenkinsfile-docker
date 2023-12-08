@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       agent any
       steps {
-        git branch: 'main', url: '<URL>'
+        git branch: 'main', url: 'https://github.com/platina-git/source-maven-java-spring-hello-webapp.git'
       }
     }
     stage('Build') {
@@ -27,20 +27,21 @@ pipeline {
     stage('Build Docker Image') {
       agent any
       steps {
-        sh '<COMMAND>'
+        sh 'docker image build -t myweb:v1 docker .'
       }
     }
     stage('Tag Docker Image') {
       agent any
       steps {
-        sh '<COMMAND>'
+        sh 'docker image tag myweb:v1 rkdxogh90/myweb:v1'
       }
     }
     stage('Publish Docker Image') {
       agent any
       steps {
         withDockerRegistry(credentialsId: 'docker-hub-token', url: 'https://index.docker.io/v1/') {
-          sh '<COMMAND>'
+          sh 'docker login -u rkdxogh90 -p "!Tkstndb75"'
+          sh 'docker push rkdxogh90/myweb:v1'
         }
       }
     }
@@ -49,7 +50,7 @@ pipeline {
         docker { image 'docker:dind' }
       }
       steps {
-        sh 'docker -H tcp://<DOCKER_HOST_PRIVATE_IP>:2375 container run --detach --name <CONTAINER_NAME> -p 80:8080 <IMAGE>:$BUILD_NUMBER'
+        sh 'docker -H tcp://172.31.21.100:2375 container run --detach --name mywebcon -p 80:8080 rkdxogh90/myweb:v1'
       }
     }
   }
