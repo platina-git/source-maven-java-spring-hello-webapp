@@ -27,7 +27,7 @@ pipeline {
     stage('Build Docker Image') {
       agent any
       steps {
-        sh 'docker image build -t myweb:v1 docker .'
+        sh 'docker image build -t myweb:v1 .'
       }
     }
     stage('Tag Docker Image') {
