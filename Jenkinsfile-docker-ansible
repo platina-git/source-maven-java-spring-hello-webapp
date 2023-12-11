@@ -48,10 +48,13 @@ pipeline {
     }
     stage('Run Docker Container') {
       agent {
-        docker { image 'docker:dind' }
+        docker { 
+          image 'rkdxogh90/jenkins-ansible'
+          args '-u 0:0 -e DOCKER_HOST=tcp://172.31.21.100:2375'
+        }
       }
       steps {
-        sh 'docker -H tcp://172.31.21.100:2375 container run --detach --name mywebcon -p 80:8080 rkdxogh90/myweb:$BUILD_NUMBER'
+        ansiblePlaybook(playbook: 'docker-container-deploy.yaml')
       }
     }
   }
